@@ -519,13 +519,112 @@ body {
   text-transform:uppercase; white-space:nowrap; z-index:1;
 }
 
+/* ── tablet ── */
 @media(max-width:900px){
-  .dstats,.devents,.dquick { grid-template-columns:1fr 1fr; }
+  .dstats,.dquick { grid-template-columns:1fr 1fr; }
+  .devents { grid-template-columns:1fr 1fr; }
   .dcreate,.dlive-layout { grid-template-columns:1fr; }
   .datt-stats { grid-template-columns:repeat(3,1fr); }
-  .datt-thead,.datt-row { grid-template-columns:1.5fr 1fr .8fr .6fr; }
-  .datt-thead span:last-child,.datt-row>*:last-child { display:none; }
 }
+
+/* ── mobile ── */
+@media(max-width:768px){
+  /* nav */
+  #app-nav { padding:0 12px; height:52px; }
+  .nav-logo-text { font-size:11px; letter-spacing:.05em; }
+  .nav-logo { margin-right:8px; }
+  .nav-live { display:none!important; }
+  .nav-back { font-size:11px; padding:4px 8px; white-space:nowrap; }
+
+  /* hide top nav tabs — use bottom bar instead */
+  #dash-nav-tabs { display:none!important; }
+
+  /* bottom tab bar visible on mobile */
+  #mobile-dash-tabbar { display:flex!important; }
+
+  /* dashboard pages */
+  .dpage { padding:62px 14px 80px; }
+  .dpage-title { font-size:18px; }
+  .dpage-sub { font-size:12px; margin-bottom:16px; }
+  .dsec { margin-bottom:10px; }
+
+  /* stats 2-col */
+  .dstats { grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
+  #d-year-grid { grid-template-columns:1fr 1fr!important; }
+  .dstat { padding:14px 12px; border-radius:12px; }
+  .dstat-num { font-size:1.5rem; }
+  .dstat-label { font-size:10px; }
+
+  /* events 1-col */
+  .devents { grid-template-columns:1fr; gap:10px; }
+
+  /* quick actions 1-col */
+  .dquick { grid-template-columns:1fr; gap:10px; }
+  .daction { padding:14px; }
+
+  /* QR & PIN page */
+  .dcreate { grid-template-columns:1fr; gap:14px; }
+  .dform-card { padding:18px 16px; }
+  .dform-row { grid-template-columns:1fr; gap:0; }
+  .dform-input { padding:12px 14px; font-size:15px; }
+  .dform-actions { flex-direction:column; }
+  .dqr-card { padding:20px 16px; }
+  .dqr-box { width:160px; height:160px; }
+  #dash-qr-output { width:128px; height:128px; }
+  .dpin-val { font-size:1.5rem; letter-spacing:.2em; }
+
+  /* attendance header */
+  .datt-header { flex-direction:column; gap:10px; }
+  .datt-actions { width:100%; flex-wrap:wrap; }
+
+  /* attendance stats 3-col */
+  .datt-stats { grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:14px; }
+  .datt-stat { padding:12px 6px; }
+  .datt-stat-num { font-size:1.1rem; }
+  .datt-stat-label { font-size:9px; }
+
+  /* live layout stacked */
+  .dlive-layout { grid-template-columns:1fr; gap:14px; }
+  .dqr-live-card { padding:16px; }
+  .dqr-live-box { min-height:160px; }
+  #dlive-qr-img { width:128px; height:128px; }
+
+  /* table: name + time only */
+  .datt-thead { grid-template-columns:1fr 5rem; padding:10px 14px; }
+  .datt-thead span:nth-child(n+2):nth-child(-n+4) { display:none; }
+  .datt-row { grid-template-columns:1fr 5rem; padding:11px 14px; }
+  .datt-row > *:nth-child(n+2):nth-child(-n+4) { display:none; }
+  .datt-name { font-size:13px; }
+
+  /* search */
+  .dsearch-input { font-size:13px; padding:9px 12px; }
+
+  /* sync toast above tab bar */
+  .sync-toast { bottom:70px; right:12px; font-size:12px; padding:8px 14px; }
+
+  /* footer hidden on mobile */
+  .footer-label { display:none; }
+}
+
+/* very small */
+@media(max-width:360px){
+  .nav-logo-text { display:none; }
+  .dstats { grid-template-columns:1fr 1fr; }
+  .pin-digit { width:44px!important; height:50px; font-size:1.1rem; }
+  .datt-stats { grid-template-columns:1fr 1fr; }
+}
+
+/* mobile bottom tab bar — hidden on desktop */
+#mobile-dash-tabbar { display:none; }
+.mob-tab {
+  flex:1; display:flex; flex-direction:column; align-items:center;
+  justify-content:center; gap:2px; cursor:pointer;
+  border:none; background:none; font-family:'DM Sans',sans-serif; padding:0;
+}
+.mob-tab-icon { font-size:22px; line-height:1; }
+.mob-tab-label { font-size:10px; font-weight:600; color:rgba(255,255,255,.4); }
+.mob-tab.active .mob-tab-label { color:var(--gold); }
+.mob-tab.active .mob-tab-icon { filter:drop-shadow(0 0 5px rgba(255,215,0,.5)); }
 </style>
 </head>
 <body>
@@ -730,6 +829,7 @@ body {
         </div>
         <div class="dform-actions">
           <button class="dbtn dbtn-gold" onclick="dGenerateQR()">↻ Generate New QR &amp; PIN</button>
+          <button class="dbtn dbtn-outline" onclick="dResetMeeting()">🗑 Reset Meeting</button>
         </div>
         <div class="dinfo-box">
           <div class="dinfo-title">💡 Cross-Device Sync</div>
@@ -804,6 +904,26 @@ body {
   </div>
 
 </div><!-- end dashboard-wrap -->
+
+<!-- mobile bottom tab bar (dashboard only) -->
+<div id="mobile-dash-tabbar" style="position:fixed;bottom:0;left:0;right:0;height:62px;background:var(--black);border-top:1px solid rgba(255,215,0,.15);z-index:300;padding-bottom:env(safe-area-inset-bottom);">
+  <button class="mob-tab active" id="mobtab-ddash" onclick="showDPage('ddash',this);updateMobTabs('ddash')">
+    <span class="mob-tab-icon">📊</span>
+    <span class="mob-tab-label">Dashboard</span>
+  </button>
+  <button class="mob-tab" id="mobtab-dcreate" onclick="showDPage('dcreate',this);updateMobTabs('dcreate')">
+    <span class="mob-tab-icon">⊞</span>
+    <span class="mob-tab-label">QR &amp; PIN</span>
+  </button>
+  <button class="mob-tab" id="mobtab-dattendance" onclick="showDPage('dattendance',this);updateMobTabs('dattendance')">
+    <span class="mob-tab-icon">✅</span>
+    <span class="mob-tab-label">Live</span>
+  </button>
+  <button class="mob-tab" onclick="exitDashboard()">
+    <span class="mob-tab-icon">🚪</span>
+    <span class="mob-tab-label">Exit</span>
+  </button>
+</div>
 
 <div class="sync-toast" id="sync-toast">
   <span class="sync-dot"></span> New check-in!
@@ -930,10 +1050,12 @@ function showDPage(id, btn) {
   document.querySelectorAll('.dpage').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  if (btn) btn.classList.add('active');
+  if (btn && btn.classList.contains('nav-tab')) btn.classList.add('active');
+  updateMobTabs(id);
   const m = window._fbMembers || [];
   if (id==='dattendance') { dRenderTable(m); dSyncLiveQR(); }
   if (id==='ddash') dRenderDash(m);
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
 // ── DASHBOARD RENDER ──
@@ -988,6 +1110,11 @@ function dFilter(q) {
   dRenderTable(filtered);
 }
 
+function dClearData() {
+  if (!confirm('Delete ALL attendance data? This cannot be undone.')) return;
+  if (window.fbClearAll) window.fbClearAll();
+}
+
 function dGenerateQR() {
   const pin = generatePIN();
   window._currentPIN = pin;
@@ -1033,9 +1160,43 @@ function dExportCSV() {
   a.download='radars_attendance.csv'; a.click();
 }
 
-function dClearData() {
-  if (!confirm('Delete ALL attendance data? This cannot be undone.')) return;
+function dResetMeeting() {
+  if (!confirm('Reset meeting details and clear all attendance data for this session?\n\nThis will:\n• Clear all check-in records\n• Reset the QR code and PIN\n• Clear the meeting name and location')) return;
+
+  // Clear form fields
+  ['d-ev-name','d-ev-loc','d-ev-date','d-ev-cap'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+
+  // Clear QR display
+  const qrOut = document.getElementById('dash-qr-output');
+  if (qrOut) qrOut.innerHTML = '<span style="font-size:36px;opacity:.2">⊞</span>';
+
+  // Clear PIN
+  window._currentPIN = '';
+  ['dash-pin-display','dlive-pin-display'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = '—';
+  });
+
+  // Reset live QR placeholder
+  const liveImg = document.getElementById('dlive-qr-img');
+  const placeholder = document.getElementById('dlive-placeholder');
+  if (liveImg) { liveImg.style.display='none'; liveImg.src=''; }
+  if (placeholder) placeholder.style.display='block';
+
+  // Reset last check-in display
+  const lastName = document.getElementById('d-last-name');
+  const lastMeta = document.getElementById('d-last-meta');
+  if (lastName) lastName.textContent = '—';
+  if (lastMeta) lastMeta.textContent = 'No check-ins yet';
+
+  // Clear Firebase data
   if (window.fbClearAll) window.fbClearAll();
+  if (window.fbSavePIN) window.fbSavePIN('');
+
+  alert('✅ Meeting reset! Fill in the new meeting details and generate a fresh QR code.');
 }
 
 // ── PIN ──
@@ -1069,7 +1230,18 @@ function submitPIN() {
 }
 
 // ── SCANNER ──
+function isMobile() {
+  return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || window.innerWidth < 768;
+}
 function startScan() {
+  // On mobile, camera rarely works via file/GitHub Pages — go straight to PIN
+  if (isMobile()) {
+    document.querySelectorAll('.pin-digit').forEach(i=>{i.value='';i.classList.remove('filled');});
+    document.getElementById('pin-error').textContent='';
+    showScreen('screen-pin');
+    setTimeout(()=>document.querySelectorAll('.pin-digit')[0].focus(),200);
+    return;
+  }
   showScreen('screen-scan');
   document.getElementById('proceed-btn').style.display='none';
   setStatus('Requesting camera permission…','');
@@ -1154,6 +1326,13 @@ function restart(){
   document.getElementById('admin-pass').value='';
   document.querySelectorAll('input[name="year"]').forEach(r=>r.checked=false);
   showScreen('screen1');
+}
+
+function updateMobTabs(activeId) {
+  ['ddash','dcreate','dattendance'].forEach(id => {
+    const tab = document.getElementById('mobtab-' + id);
+    if (tab) tab.classList.toggle('active', id === activeId);
+  });
 }
 
 window.onload=()=>{initPINInputs();showScreen('screen1');dSyncLiveQR();};
