@@ -6,7 +6,7 @@
 <title>R.A.D.A.R.S · Check-In</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/zxing-js/0.18.6/index.min.js"></script>
+<script src="https://unpkg.com/@zxing/library@latest"></script>
 <style>
 /* ══════════════════════════════════════════════
    DESIGN TOKENS — white / black / gold
@@ -669,7 +669,7 @@ body {
       <div class="ci-title">Scan QR Code</div>
       <div class="ci-sub">Point your camera at the meeting QR code.</div>
       <div class="scanner-wrap">
-        <video id="qr-video" playsinline muted></video>
+        <video id="qr-video" playsinline autoplay muted></video>
         <div class="scanner-overlay">
           <div class="sc tl"></div><div class="sc tr"></div>
           <div class="sc bl"></div><div class="sc br"></div>
@@ -1234,16 +1234,8 @@ function isMobile() {
   return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || window.innerWidth < 768;
 }
 function startScan() {
-  // On mobile, camera rarely works via file/GitHub Pages — go straight to PIN
-  if (isMobile()) {
-    document.querySelectorAll('.pin-digit').forEach(i=>{i.value='';i.classList.remove('filled');});
-    document.getElementById('pin-error').textContent='';
-    showScreen('screen-pin');
-    setTimeout(()=>document.querySelectorAll('.pin-digit')[0].focus(),200);
-    return;
-  }
   showScreen('screen-scan');
-  document.getElementById('proceed-btn').style.display='none';
+  document.getElementById('proceed-btn').style.display = 'none';
   setStatus('Requesting camera permission…','');
   requestCameraAndScan();
 }
